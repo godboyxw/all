@@ -1,0 +1,177 @@
+html {
+  font-size: calc(100vw/19.2)
+}
+
+html,
+body {
+  width: 100%;
+  margin: 0
+}
+
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.header {
+  width: 100%;
+  height: 6.99rem;
+  position: relative;
+  background-color: #6E7DB5;
+}
+
+.header .avatar {
+  width: 2.14rem;
+  height: 0.75rem;
+  position: absolute;
+  left: 4.66rem;
+  top: 0.08rem;
+  overflow: hidden;
+  background-color: red;
+}
+
+.header .avater .image {
+  width: 100%;
+  height: 100%;
+}
+
+.header .nav {
+  position: absolute;
+  left: 6.94rem;
+  top: 0;
+  overflow: hidden;
+}
+
+.header .nav .item {
+  float: left;
+  width: 2rem;
+  height: 0.9rem;
+  font-size: 0.18rem;
+  font-family: MicrosoftYaHeiUI;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  line-height: 0.9rem;
+  text-align: center;
+}
+
+.header .title {
+  height: 0.46rem;
+  position: absolute;
+  left: 3.67rem;
+  top: 4.25rem;
+  font-size: 0.48rem;
+  font-family: DengXian-Bold;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 1);
+  line-height: 0.24rem;
+  /* letter-spacing: 0.24rem; */
+}
+
+.header .desc {
+  width: 3.35rem;
+  height: 0.61rem;
+  position: absolute;
+  left: 3.67rem;
+  top: 5.12rem;
+  font-size: 0.24rem;
+  font-family: MicrosoftYaHei;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  line-height: 0.36rem;
+}
+
+.content {
+  width: 100%;
+  height: 3rem;
+  padding-top: 1.11rem;
+  background: rgba(255, 255, 255, 1);
+}
+
+.content .desc {
+  width: 9rem;
+  height: 1.21rem;
+  margin: 0 auto 0.68rem;
+  font-size: 0.24rem;
+  font-family: MicrosoftYaHei;
+  font-weight: 400;
+  color: rgba(56, 56, 56, 1);
+  line-height: 0.48rem;
+  letter-spacing: 0.012rem;
+}
+
+.content .park {
+  width: 100%;
+  height: 8rem;
+  padding-top: 0.98rem;
+}
+
+.content .park .title {
+  width: 2.27rem;
+  height: 0.44rem;
+  margin: 0 auto 0.5rem;
+  font-size: 0.44rem;
+  font-family: MicrosoftYaHei;
+  font-weight: 400;
+  color: rgba(53, 53, 53, 1);
+  line-height: 0.3rem;
+}
+
+.content .park .function {
+  width: 6.61rem;
+  height: 0.16rem;
+  margin: 0 auto 1.19rem;
+  font-size: 0.16rem;
+  font-family: MicrosoftYaHei;
+  font-weight: 400;
+  color: rgba(58, 58, 58, 1);
+  line-height: 0.3rem;
+}
+
+.content .park .lists {
+  width: 100%;
+  padding: 0 2.38rem 0 3.12rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.content .park .lists .item {
+  width: 33.3333%;
+  margin-bottom: 1rem;
+  padding-top: 0.2rem;
+  position: relative;
+}
+
+.content .park .lists .item .icon {
+  width: 0.58rem;
+  height: 0.58rem;
+  background: rgba(98, 151, 108, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.content .park .lists .item .name {
+  margin-bottom: 0.42rem;
+  margin-left: 0.98rem;
+  font-size: 0.2rem;
+  font-family: DengXian-Bold;
+  font-weight: bold;
+  color: rgba(30, 30, 30, 1);
+  line-height: 0.3rem;
+  /* letter-spacing: 0.1rem; */
+}
+
+.content .park .lists .item .info {
+  width: 2.66rem;
+  margin-left: 0.91rem;
+  font-size: 0.14rem;
+  font-family: MicrosoftYaHei;
+  font-weight: 400;
+  color: rgba(87, 87, 87, 1);
+  line-height: 0.28rem;
+  /* letter-spacing: 0.07rem; */
+}

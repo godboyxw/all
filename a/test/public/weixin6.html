@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <!-- <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script> -->
+  <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <div>wws1s03139000111fjjffjj</div>
+  <script>
+    wx.config({
+      debug: true,
+      appId: 'wx75340481908402a8', // 必填，公众号的唯一标识
+      timestamp: '1551858556,', // 必填，生成签名的时间戳
+      nonceStr: 'd0fb6a4b99872597890eae30baa6e0b9df090a99', // 必填，生成签名的随机串
+      signature: '7bef25d8f81b2cb292a40b587456ff1b20975508', // 必填，签名，见附录1
+      jsApiList: [
+        'checkJsApi',
+        'getNetworkType',
+        'openLocation',
+        'getLocation',
+        'startSearchBeacons',
+        'onSearchBeacons',
+        'stopSearchBeacons'
+      ]
+    })
+    wx.ready(function () {
+      // 蓝牙扫描接口
+      wx.startSearchBeacons({
+        ticket: '',
+        success: function (res) {
+          wx.onSearchBeacons({
+            complete: function (data) {
+              console.log(data)
+              console.log(JSON.stringify(data))
+              showBeacon(data.beacons)
+            }
+          })
+        },
+        fail: function (res) {
+          var errmsg = JSON.stringify(res.errMsg)
+          var arr = errmsg.split(':')
+          var errmsgBody = arr[1]
+          if (errmsgBody.substr(0, 9) == 'bluetooth') {
+            alert('蓝牙未打开，请打开后重试！')
+          } else if (errmsgBody.substr(0, 8) == 'location') {
+            alert('手机位置未打开，请打开后重试！')
+          } else {
+            console.log(JSON.stringify(res))
+          }
+        }
+      })
+    })
+
+    wx.error(function (res) {
+      //验证错误时执行的函数
+      console.log(JSON.stringify(res))
+    })
+  </script>
+</body>
+
+</html>

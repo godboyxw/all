@@ -1,0 +1,29 @@
+:root {
+    --bg-color: #dddddd;
+    --font_size_34: 14px;
+}
+
+.container{
+    width: 100px;
+    height: 100px;
+    background-color: var(--bg-color);
+    font-size: var(--font_size_34);
+}
+
+.em{
+    text-indent: 2em;
+    line-height: 1em;
+}
+
+.text{
+    margin: 10px 0 ;
+    border: 1px solid red;
+    width: 100px;
+    text-align: justify;
+    text-align-last: justify;
+}
+/* .text:after{
+    content: '';
+    display: inline-block;
+    width: 100%;
+} */

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+  </head>
+
+  <body>
+    <div>test</div>
+    <button id="btn">click</button>
+    <script>
+      window.onload = function() {
+        var pageUrl = window.location.href.split('#')[0]
+        var ip = 'http://www.geonoon.com:8087/'
+        console.log(1)
+        alert(222)
+        var xhr = new XMLHttpRequest()
+        console.log(2)
+        xhr.open('GET', `${ip}?url=${pageUrl}`, true)
+        xhr.send()
+        xhr.onreadystatechange = function() {
+          console.log(3)
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            console.log(4)
+            var data = xhr.response
+            var res = JSON.parse(data)
+            console.log(res)
+            let test = {
+              debug: true,
+              appId: res.appid,
+              timestamp: res.timestamp,
+              nonceStr: res.noncestr,
+              signature: res.signature,
+              jsApiList: [
+                'startSearchBeacons',
+                'onSearchBeacons',
+                'stopSearchBeacons'
+              ]
+            }
+            wx.config(test)
+            alert(111)
+            document.getElementById('btn').onclick = function() {
+              wx.startSearchBeacons({
+                ticket: '', //摇周边的业务ticket, 系统自动添加在摇出来的页面链接后面
+                complete: function(res) {
+                  console.log(res)
+                  alert(111)
+                  // wx.onSearchBeacons({
+                  //   complete: function(data) {
+                  //     console.log(JSON.stringify(data))
+                  //     alert(JSON.stringify(data))
+                  //     showBeacon(data.beacons) //处理返回的beacon数组
+                  //   }
+                  // })
+                }
+              })
+              wx.error(function(res) {
+                //如果初始化出错了会调用此方法
+                alert(JSON.stringify(res))
+              })
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

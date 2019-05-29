@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+</head>
+
+<body>
+    <div>test</div>
+    <button id="btn">click</button>
+    <script>
+        window.onload = function () {
+            var pageUrl = window.location.href.split('#')[0]
+            var ip = 'http://www.geonoon.com:8087/'
+            console.log(1)
+            alert(147896)
+            var xhr = new XMLHttpRequest()
+            console.log(2)
+            xhr.open('GET', `${ip}?url=${pageUrl}`, true)
+            xhr.send()
+            xhr.onreadystatechange = function () {
+                console.log(3)
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log(4)
+                    var data = xhr.response
+                    var res = JSON.parse(data)
+                    console.log(res)
+                    alert(res.token)
+                    let test = {
+                        debug: true,
+                        appId: res.appid,
+                        timestamp: res.timestamp,
+                        nonceStr: res.noncestr,
+                        signature: res.signature,
+                        jsApiList: [
+                            'checkJsApi', 'startSearchBeacons', 'stopSearchBeacons', 'onSearchBeacons',
+                            'openLocation', 'getLocation', 'onMenuShareTimeline',
+                            'onMenuShareAppMessage'
+                        ]
+                    }
+                    wx.config(test)
+                    alert(123)
+                    wx.ready(function () {
+                        // wx.checkJsApi({
+                        //     jsApiList: ['checkJsApi', 'startSearchBeacons', 'stopSearchBeacons', 'onSearchBeacons'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                        //     success: function (res) {
+                        //         // 以键值对的形式返回，可用的api值true，不可用为false
+                        //         // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+                        //         alert(res);
+                        //     }
+                        // });
+                        wx.startSearchBeacons({
+                            ticket: "", //摇周边的业务ticket, 系统自动添加在摇出来的页面链接后面
+                            complete: function (argv) {
+                                alert(argv)
+                                //wx.onSearchBeacons({
+                                // complete: function (argv) {
+                                //   alert(argv)
+                                // }
+                                // });
+                            }
+                        });
+
+                        wx.onMenuShareTimeline({
+                            title: 'test',
+                            link: '',
+                            imgUrl: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg',
+                            trigger: function (res) {
+                                // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+                                // alert('用户点击分享到朋友圈');
+                            },
+                            success: function (res) {
+                                alert('已分享');
+                            },
+                            cancel: function (res) {
+                                alert('已取消');
+                            },
+                            fail: function (res) {
+                                alert(JSON.stringify(res));
+                            }
+                        });
+
+
+                    })
+                    wx.error(function (res) {
+                        //如果初始化出错了会调用此方法
+                        alert(JSON.stringify(res))
+                    })
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+//js面向对象，用于需要产生大批量的具有不同状态、行为的对象实例时用到的方法，此时比面向过程好用！
+function Bubble(x,y) { //构造函数  
+	this.x =x
+	this.y=y
+}
+
+Bubble.prototype.name = function () { //原型链
+  console.log('i am god')
+}
+
+var tom = new Bubble(1,2) //new实例化对象
+
+tom.name() //调用原型链上的name方法  //i am god
+
+console.log(tom)  //Bubble { x: 1, y: 2 }
+
+
+
+function Point(x, y) {
+  this.x = x;
+  this.y = y;
+}
+
+Point.prototype.toString = function () {
+  return '(' + this.x + ', ' + this.y + ')';
+};
+
+var p = new Point(1, 2);
+
+console.log(p.toString())  //(1, 2)
+
+console.log(p)  //Point { x: 1, y: 2 }
+
+
+
+class Dot {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  toString() {
+    return '(' + this.x + ', ' + this.y + ')';
+  }
+}
+var p =new Dot(1,2)
+console.log(p.toString())  //(1, 2)
+console.log(p)   //Dot { x: 1, y: 2 }

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div>qqqq</div>
+    <script>
+        /*
+ rtmap.lbspoisdk, a JavaScript library for scan beacon to ask position in indoor maps. http://www.rtmap.com
+ (c) 2015-2016, ludeliang[ip007@126.com] 
+ (v) 1.0.2-beta
+ (m) modify for wechat device test 201708
+*/
+        (function () {
+            var RTB = {
+                version: "rtmap.lbspoisdk.1.0.2-beta.js",
+                scantype: "default", // 扫描方式
+                status: "ready", // 当前状态
+                startSearchBeaconsTime: (new Date()).getTime(), //第一次开始扫描时间
+                searchBeaconsCallbackTime: (new Date()).getTime(), //开始扫描成功回调时间
+                scanStart: (new Date()).getTime(), // 扫描开始时间(该时间会变)
+                firstScan: (new Date()).getTime(), //第一次开始扫描时间
+                scanSuccess: null, // 成功扫描到beacon并发送定位请求开始时间
+                locationSuccess: null, // 成功返回定位结果时间
+                scanTimeout: 1000 * 1, // 扫描超时，默认3秒
+                postTimeout: 1000 * 5, // 请求定位接口超时
+                scanMin: 0, // 最少beacon数
+                scanMax: 20, // 最多beacon数
+                loadStart: (new Date()).getTime(), // 加载开始时间
+                loadTimeout: 1000 * 10, // 加载超时
+                rssiMax: 0, // 信号强度范围小于0
+                rssiMin: -100, // 信号强度范围大于-100
+                period: 3000, // beacon 有效期
+                beacons: [],
+                wxsdk: "https://res.wx.qq.com/open/js/jweixin-1.1.0.js", // 微信接口
+                signurl: "https://weix.rtmap.com/weixinapi/wxb5e69065eb3d67ce/jsapi_sign?url=" +
+                    encodeURIComponent(window.location.href), // 微信签名接口
+                pidurl: "https://weix.rtmap.com/mp/wxb5e69065eb3d67ce/token/ticket?ticket=", // 微信ticket换取openid接口
+                lbsurl: "https://locateapi.rtmap.com/rtmap_lbs_api/v1/rtmap/lbs_locateinfo_facade", // lbs定位接口 "http://123.57.74.38:8082/rtmap_lbs_api/v1/rtmap/lbs_locateinfo_facade"
+                lbsurllist: [
+                    "https://locateapi.rtmap.com/rtmap_lbs_api/v1/rtmap/lbs_locateinfo_facade",
+                    "https://locateapi.rtmap.com/rtmap_lbs_api/v1/rtmap/lbs_locateinfo_facade",
+                    "https://locateapi.rtmap.com/rtmap_lbs_api/v1/rtmap/lbs_locateinfo_facade",
+                    "https://locateapi.rtmap.com/rtmap_lbs_api/v1/rtmap/lbs_locateinfo_facade",
+                    "https://locateapi.rtmap.com/rtmap_lbs_api/v1/rtmap/lbs_locateinfo_facade"
+                ],
+                param: { // 提交给lbs的参数
+                    "user_id": "",
+                    // "user_id_desc": window.navigator.userAgent, 
+                    "user_id_desc": "lbs_webmap openid",
+                    "brand": "",
+                    "imei": "",
+                    "key": "0KwOHEy7BQ",
+                    "latitude": "",
+                    "longitude": "",
+                    "apinfo": [],
+                    "beaconinfo": [],
+                    //不需要的时候不写
+                    "locate_data": {
+                        /*
+                         "gps":{
+                         "longitude":"",
+                         "latitude":"",
+                         "accuracy":""
+                         },
+                         "pdr":{
+                         "move_status":"",
+                         "step":""
+                         },
+                         "compass":{
+                         "standard":"",
+                         "average":""
+                         },
+                         "pressure":"",
+                         "locate_result":{
+                         "timestamp":"",
+                         "build_id":"",
+                         "floor_id":"",
+                         "x_before":"",
+                         "y_before":""
+                         }
+                         */
+                    },
+                    "need_poi": false,
+                    "timestamp": ""
+                },
+                logs: [],
+                sendCount: 0, //定位请求次数
+                onSign: function () {}, // 签名成功回调
+                onGetOpenid: function () {}, // 获取openid回调
+                onGetLocation: function () {}, // 获取GPS定位信息回调s
+                onScanStart: function () {}, // 开始扫描beacon的回调
+                onScanSearch: function () {}, // 扫描beacon心跳回调
+                onScanStop: function () {}, // 结束扫描beacon时回调
+                beforePost: function () {}, // 开始提交beacon信息时回调
+                onPost: function () {}, // 提交beacon成功回调
+                onOverTime: function () {}, // 扫描超时情况下回调
+                onBluetoothPowerOff: function () {}, // 蓝牙未打开回调
+                onDetectDataFull: function () {}, // 每秒扫描beacon信息满900条时
+                onBlueWeakSignal: function () {}, //蓝牙信号弱
+                onNetworkWeakSignal: function () {} //网络信号弱
+            };
+
+            RTB.log = function (l) {
+                var t = new Date();
+                var tt = "[" + t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds() + "]  ";
+                this.logs.push(tt + l);
+            };
+            // 加载script文件
+            RTB.getParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).replace(/\?/g, "&").match(reg);
+                if (r != null) {
+                    return unescape(r[2]);
+                }
+                return null;
+            };
+            RTB.load = function (src, callback, load) {
+                var sfile = document.createElement("script");
+                sfile.charset = "utf-8";
+
+                if (typeof callback == "function") {
+                    if (sfile.readyState) {
+                        sfile.onreadystatechange = function () {
+                            if ("loaded" === sfile.readyState || "complete" === sfile.readyState) {
+                                sfile.onreadystatechange = null;
+                                typeof (callback) == "function" && callback();
+                            }
+                        }
+                    } else {
+                        sfile.onload = function () {
+                            typeof (callback) == "function" && callback();
+                        }
+                    }
+                }
+                sfile.src = src;
+                var snode = document.getElementsByTagName("script")[0];
+                snode.parentNode.insertBefore(sfile, snode)
+            };
+            // post Beacon 信息
+            RTB.post = function (url, info, callback, type) {
+                // 创建 XMLHttpRequest 对象
+                function CreateXMLHttpRequest() {
+                    var xmlobj;
+                    if (window.ActiveXObject) {
+                        try {
+                            xmlobj = new ActiveXObject("Msxml2.XMLHTTP");
+                        } catch (e) {
+                            try {
+                                xmlobj = new ActiveXObject("Microsoft.XMLHTTP");
+                            } catch (E) {
+                                xmlobj = false;
+                            }
+                        }
+                    } else if (window.XMLHttpRequest) {
+                        xmlobj = new XMLHttpRequest();
+                    }
+                    return xmlobj;
+                }
+                if (RTB.currentReq && !RTB.currentReq.callbackStatus) {
+                    //RTB.currentReq.abort();
+                    //$("#show .timestamp").html("定位请求超时,时间:" + (new Date()).getTime().toString());
+                    callback(JSON.parse(
+                        '{"result":{"req":"lbs_locateinfo","error_code":"","error_msg":"reuqest timeout"},"poiinfo":[],"timestamp":"' +
+                        (new Date()).getTime().toString() + '"}'));
+                }
+                var req = CreateXMLHttpRequest();
+                req.open(type || "POST", url, true);
+                req.setRequestHeader("Accept", "*/*");
+                req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"); //设置请求头信息  
+                // req.onload = callback( req );
+                req.onreadystatechange = function () {
+                    if (req.readyState == 4 && req.status == 200) { //成功或断网时也返回
+                        callback(JSON.parse(req.responseText));
+                        $("#show .timestamp").html("定位返回成功,时间:" + (new Date()).getTime().toString());
+                        RTB.currentReq.callbackStatus = true;
+                    }
+                }
+                req.send(JSON.stringify(info) || null); //设置为发送给服务器数据  
+                RTB.currentReq = req;
+                RTB.sendCount = RTB.sendCount + 1;
+            };
+            // 获取 openId 作为 user_id
+            RTB.getOpenid = function () {
+                var _this = this;
+                var openid = _this.getParam("openid");
+                openid = openid ? openid : _this.getParam("openId");
+                openid = openid ? openid : (_this.getParam("op") ? _this.getParam("op").split(",")[0] : null);
+                if (openid) {
+                    _this.param.user_id = openid;
+                    _this.onGetOpenid(_this.param.user_id);
+                } else {
+                    var ticket = _this.getParam("ticket");
+                    var timeKey = 'rtmaplbs_' + (new Date()).getTime() + (Math.random() * 9999 >> 0);
+                    window[timeKey] = function (aData) {
+                        if (aData.obj) {
+                            _this.param.user_id = aData.obj.openId;
+                            _this.onGetOpenid(_this.param.user_id);
+                        }
+                    };
+                    _this.load(_this.pidurl + ticket + '&callback=' + timeKey);
+                }
+            };
+            // 获取签名信息
+            RTB.getSign = function () {
+                var _this = this;
+                _this.scanStart = (new Date()).getTime(); //扫描开始时间
+                _this.firstScan = (new Date()).getTime(); //第一次扫描开始时间
+                _this.startSearchBeaconsTime = (new Date()).getTime(); //第一次扫描开始时间
+                var url = this.signurl;
+                var timeKey = 'rtmaplbs_' + (new Date()).getTime() + (Math.random() * 9999 >> 0);
+                window[timeKey] = function (data) {
+                    wx.config({
+                        beta: true,
+                        debug: false,
+                        appId: data.obj.appid,
+                        timestamp: data.obj.timestamp,
+                        nonceStr: data.obj.nonceStr,
+                        signature: data.obj.signature,
+                        jsApiList: [
+                            'startSearchBeacons',
+                            'stopSearchBeacons',
+                            'onSearchBeacons',
+                            'startMonitoringBeacons',
+                            'stopMonitoringBeacons',
+                            'onBeaconsInRange',
+                            'checkJsApi',
+                            'onMenuShareTimeline',
+                            'onMenuShareAppMessage',
+                            'onMenuShareQQ',
+                            'onMenuShareWeibo',
+                            'hideMenuItems',
+                            'showMenuItems',
+                            'hideAllNonBaseMenuItem',
+                            'showAllNonBaseMenuItem',
+                            'translateVoice',
+                            'startRecord',
+                            'stopRecord',
+                            'onRecordEnd',
+                            'playVoice',
+                            'pauseVoice',
+                            'stopVoice',
+                            'uploadVoice',
+                            'downloadVoice',
+                            'chooseImage',
+                            'previewImage',
+                            'uploadImage',
+                            'downloadImage',
+                            'getNetworkType',
+                            'openLocation',
+                            'getLocation',
+                            'hideOptionMenu',
+                            'showOptionMenu',
+                            'closeWindow',
+                            'scanQRCode',
+                            'chooseWXPay',
+                            'openProductSpecificView',
+                            'addCard',
+                            'chooseCard',
+                            'openCard'
+                        ]
+                    });
+                    wx.ready(function () {
+                        // wx.hideOptionMenu();
+                        _this.signTicket = data.obj.jsapi_ticket;
+                        // _this.getLocation();    // 获取经纬度
+                        _this.getBeacons(); // 获取beacons
+                        _this.onSign(data);
+                    });
+                }
+                this.load(url + '&callback=' + timeKey);
+            };
+            // 获取经纬度信息
+            RTB.getLocation = function (ticket) {
+                var _this = this;
+                wx.getLocation({
+                    type: 'wgs84',
+                    success: function (res) {
+                        _this.param.latitude = res.latitude;
+                        _this.param.longitude = res.longitude;
+                        _this.onGetLocation(res);
+                    }
+                });
+            };
+            // 获取beacon信息
+            RTB.getBeacons = function () {
+                var _this = this;
+                _this.stopBeacons();
+                // 开启beacon扫描
+                wx.startSearchBeacons({
+                    ticket: _this.signTicket,
+                    complete: function (argv) {
+                        _this.searchBeaconsCallbackTime = (new Date()).getTime(); //成功扫描回调时间
+                        if (argv.errMsg) {
+                            if (argv.errMsg.indexOf("bluetooth power off") > 0) {
+                                //蓝牙未打开
+                                _this.onBluetoothPowerOff();
+                                console.log(argv.errMsg);
+                            } else {
+                                //开启蓝牙信号检测
+                                _this.initIntervalDetect();
+                            }
+                        }
+                        // 监听扫beacon事件
+                        _this.status = "ready";
+                        _this.scanStart = (new Date()).getTime();
+                        _this.onScanStart(_this.scanStart + " " + argv.errMsg);
+                        wx.onSearchBeacons({
+                            complete: function (jsonData) {
+                                //_this.scanStart = (new Date()).getTime();
+                                //_this.onScanStart(_this.scanStart);
+                                //将原处理变为回调函数执行，可以对微信返回数据做处理，做修改再执行
+                                _this.onScanSearch(jsonData, function (argv) {
+                                    if (argv.beacons) {
+                                        var _rssi = 0,
+                                            add_time = (new Date()).getTime();
+                                        for (var i = 0; i < argv.beacons.length; i++) {
+                                            var _rssi = Number(argv.beacons[i].rssi);
+                                            if (_rssi > -100 && _rssi < 0) {
+                                                argv.beacons[i]["add_time"] =
+                                                    add_time;
+                                                _this.beacons.push(argv.beacons[
+                                                    i]);
+                                                // 假如beacon数量超出一定范围
+                                                if (_this.beacons.length >
+                                                    _this.scanMax) {
+                                                    _this.beacons.shift();
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        // 判断是否满足提交条件
+                                        if (_this.status == "ready" &&
+                                            ((_this.beacons.length >= _this.scanMin) ||
+                                                ((new Date()).getTime() - _this
+                                                    .scanStart >= _this.scanTimeout
+                                                ))) {
+                                            _this.scanSuccess = (new Date()).getTime(); //记录首次扫描成功并发送定们信息时间
+                                            //_this.param.beaconinfo = _this.beacons;
+                                            //_this.param.beaconinfo = argv.beacons;//不使用buffer，扫到就发
+                                            for (var j = 0; j < argv.beacons.length; j++) {
+                                                _this.param.beaconinfo.push(
+                                                    argv.beacons[j]);
+                                            }
+                                            //_this.postBeacons();
+                                        } else if (_this.status == "sending" &&
+                                            ((new Date()).getTime() - _this.scanStart >=
+                                                _this.postTimeout)) {
+                                            _this.status = "ready";
+                                        }
+                                        // 超时扫描不到beacon
+                                        if (!_this.beacons.length && ((new Date())
+                                                .getTime() - _this.loadStart >=
+                                                _this.loadTimeout)) { //
+                                            _this.onOverTime();
+                                        }
+
+                                    }
+                                });
+                            }
+                        });
+
+                    }
+                });
+            };
+            // 过滤不在有效期内的 beacons
+            RTB.filterBeacons = function () {
+                if (this.period === Infinity) {
+                    return true;
+                } else if (typeof (this.period) === "number") {
+                    var now_time = (new Date()).getTime();
+                    this.beacons = $.grep(this.beacons, function (n, i) {
+                        return (now_time - n.add_time) < this.period;
+                    });
+                }
+            };
+            // 停止扫描获取beacons
+            RTB.stopBeacons = function () {
+                var _this = this;
+                wx.stopSearchBeacons({
+                    complete: function (res) {
+                        _this.status = "stop";
+                        _this.onScanStop(res);
+                    }
+                });
+            };
+
+            RTB.lbsurlIndex = 0;
+            // 发送beacon信息
+            RTB.postBeacons = function () {
+                var _this = this;
+                _this.filterBeacons();
+                _this.status = "sending";
+                _this.scanStart = (new Date()).getTime();
+                _this.param.timestamp = (new Date()).getTime();
+                _this.param.last_lbsinfo = window.wechat.lastlbsinfo;
+                _this.beforePost(_this.lbsurl, _this.param);
+                _this.post(_this.lbsurl, _this.param, function (aData) {
+                    _this.locationSuccess ? "" : _this.locationSuccess = (new Date()).getTime(); //记录首次扫描成功并发送定位信息时间
+                    _this.status = "ready";
+                    _this.onPost(aData);
+                    _this.param.last_timestamp = _this.param.timestamp;
+                    // ...
+                });
+                _this.lbsurl = _this.lbsurllist[_this.lbsurlIndex];
+                if (_this.lbsurlIndex < _this.lbsurllist.length - 1) {
+                    _this.lbsurlIndex++;
+                } else {
+                    _this.lbsurlIndex = 0;
+                }
+            };
+            RTB.getAttrInit = function () {
+                var _this = this;
+                var acceptAttr = ["namespace", "scanTimeout", "loadTimeout", "postTimeout", "scanMax",
+                    "scanMin", "rssiMax", "rssiMin", "period"
+                ];
+                var attr = {};
+                var js = window.document.getElementsByTagName("script");
+                for (var i = 0; i < js.length; i++) {
+                    var atts = js[i]["attributes"];
+                    for (var j = 0; j < atts.length; j++) {
+                        // if( atts[j]["nodeValue"]==_this.version ){
+                        if ((new RegExp(_this.version)).test(atts[j]["nodeValue"])) {
+                            attr = atts;
+                        }
+                    }
+                };
+
+                for (var index = 0; index < attr.length; index++) {
+                    var key = attr[index]["nodeName"],
+                        val = attr[index]["nodeValue"]
+                    if (acceptAttr.toString().indexOf(key) >= 0) {
+                        _this[key] = Number(val) == val ? Number(val) : val;
+                    }
+                }
+            };
+
+            //定时记录下来信息
+            RTB.intervalData = [];
+            //
+            RTB.intervalCount = 0; //已收集BEACON计数
+            RTB.intervalBeaconCount = 1; //收集BEACON次数(以秒为单位)
+            //定时心跳函数,检测扫描的beacon状态
+            RTB.initIntervalDetect = function () {
+                console.log(navigator.userAgent);
+                var _this = this;
+                window.clearTimeout(_this.intervalTimer);
+                //赋初值
+                _this.scanSuccess = (new Date()).getTime();
+                _this.intervalTimer = setInterval(function () {
+                    _this.postBeacons();
+                    $("#show .timestamp").html("定时请求发送成功,时间:" + (new Date()).getTime().toString());
+                    //距离上次扫描到蓝牙
+                    if (((new Date()).getTime() - _this.scanSuccess) > 8000) {
+                        _this.scanSuccess = (new Date()).getTime();
+                        _this.onBlueWeakSignal();
+                        //_this.getBeacons();
+                    }
+                    _this.intervalCount++;
+                    if (_this.intervalCount >= _this.intervalBeaconCount) {
+                        _this.param.beaconinfo = []; //清空缓存
+                        _this.intervalCount = 0;
+                    }
+
+                }, 1200);
+            };
+
+            //停止检测
+            RTB.stopDetect = function () {
+                var _this = this;
+                window.clearTimeout(_this.intervalTimer);
+                _this.stopBeacons();
+            };
+
+            //发送Beacon
+            RTB.intervalPostBeacons = function (timestamp) {
+                var _this = this;
+                _this.filterBeacons();
+                _this.status = "sending";
+                _this.scanStart = (new Date()).getTime();
+                _this.param.timestamp = timestamp;
+                _this.beforePost(_this.lbsurl, _this.param);
+                var statusItem = null;
+                _this.post(_this.lbsurl, _this.param, function (aData) {
+                    _this.locationSuccess ? "" : _this.locationSuccess = (new Date()).getTime(); //记录首次扫描成功并发送定位信息时间
+                    _this.status = "ready";
+                    if (aData.timestamp) {
+                        for (var i = 0; i < _this.intervalData.length; i++) {
+                            if (_this.intervalData[i].timestamp == aData.timestamp) {
+                                _this.intervalData[i].lbsinfo = aData.lbsinfo;
+                                _this.intervalData[i].networkstatus = "ok";
+                                _this.intervalData[i].bluetoothstatus = "ok"; //蓝牙状态
+                                _this.intervalData[i].error_msg = aData.result.error_msg;
+                                statusItem = _this.intervalData[i];
+                            }
+                        }
+                    }
+                    _this.onPost(aData, statusItem);
+                    // ...
+                });
+            };
+
+            // 初始化
+            RTB.init = function () {
+                var _this = this;
+                _this.getAttrInit(); // 获取参数配置
+                _this.getOpenid(); // 获取openId
+                // 获取微信签名
+                if (window['wx'] && window['wx']['startSearchBeacons']) {
+                    _this.getSign();
+                } else {
+                    _this.load(_this.wxsdk, function () {
+                        _this.getSign();
+                    });
+                }
+            };
+            //RTB.init();
+            if (RTB["namespace"]) {
+                window[RTB.namespace] = RTB;
+            } else {
+                window.wechat = RTB;
+            }
+        })();
+    </script>
+</body>
+
+</html>

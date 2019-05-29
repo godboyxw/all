@@ -1,0 +1,462 @@
+{
+    "version": 8,
+    "name": "Geonoon Map",
+    "sprite": "http://www.geonoon.com:8890/map/sprites/wiec",
+    "glyphs": "http://www.geonoon.com:8890/map/fonts/{fontstack}/{range}.pbf",
+    "sources": {
+        "1_fl": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_1_bkdata.geojson"
+        },
+        "1_bg": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_1_fndata.geojson"
+        },
+        "1_ft": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_1_poidata.geojson"
+        },
+        "2_fl": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_2_bkdata.geojson"
+        },
+        "2_bg": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_2_fndata.geojson"
+        },
+        "2_ft": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_2_poidata.geojson"
+        },
+        "3_fl": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_3_bkdata.geojson"
+        },
+        "3_bg": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_3_fndata.geojson"
+        },
+        "3_ft": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_3_poidata.geojson"
+        },
+        "4_fl": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_4_bkdata.geojson"
+        },
+        "4_bg": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_4_fndata.geojson"
+        },
+        "4_ft": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_4_poidata.geojson"
+        },
+        "-1_fl": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_b1_bkdata.geojson"
+        },
+        "-1_bg": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_b1_fndata.geojson"
+        },
+        "-1_ft": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_b1_poidata.geojson"
+        },
+        "-1_bc": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_b1_beacon.geojson"
+        },
+        "-2_fl": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_b2_bkdata.geojson"
+        },
+        "-2_bg": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_b2_fndata.geojson"
+        },
+        "-2_ft": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_b2_poidata.geojson"
+        },
+        "-2_bc": {
+            "type": "geojson",
+            "data": "http://www.geonoon.com:8890/map/data/geojson/thjc/4326/floor_b2_beacon.geojson"
+        }
+    },
+    "layers": [{
+            "id": "background",
+            "type": "background",
+            "paint": {
+                "background-opacity": 1,
+                "background-color": "#ffffff"
+            }
+        }, {
+            "id": "1_fl",
+            "type": "fill",
+            "source": "1_fl",
+            "paint": {
+                "fill-color": "#E7E7E7",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        }, {
+            "id": "1_bg",
+            "type": "fill",
+            "source": "1_bg",
+            "paint": {
+                "fill-color": "#EEEEEE",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        }, {
+            "id": "1_ft",
+            "type": "fill",
+            "source": "1_ft",
+            "paint": {
+                "fill-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#CDE7FE", [180101, 180102, 180201, 180301, 180502], "#C6EBFE", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#F8E0ED", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#CDE8FD", 190308, "#D2E8F9", "#D2E8F9"
+                ],
+                "fill-outline-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#AEEEEE", [180101, 180102, 180201, 180301, 180502], "#B4D8F2", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#ECCBDC", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#D2E3F5", 190308, "#BBDBF4", "#B8D7EF"
+                ],
+                "fill-opacity": 1
+            }
+        }, {
+            "id": "1_text",
+            "type": "symbol",
+            "source": "1_ft",
+            "layout": {
+                "text-field": "{name_chinese}",
+                "text-font": ["NotoSansHans"],
+                "text-size": 10,
+                "text-anchor": "center",
+                "text-offset": [0, 0]
+            }
+        }, {
+            "id": "2_fl",
+            "type": "fill",
+            "source": "2_fl",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": "#E7E7E7",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        }, {
+            "id": "2_bg",
+            "type": "fill",
+            "source": "2_bg",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": "#EEEEEE",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        }, {
+            "id": "2_ft",
+            "type": "fill",
+            "source": "2_ft",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#CDE7FE", [180101, 180102, 180201, 180301, 180502], "#C6EBFE", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#F8E0ED", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#CDE8FD", 190308, "#D2E8F9", "#D2E8F9"
+                ],
+                "fill-outline-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#AEEEEE", [180101, 180102, 180201, 180301, 180502], "#B4D8F2", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#ECCBDC", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#D2E3F5", 190308, "#BBDBF4", "#B8D7EF"
+                ],
+                "fill-opacity": 1
+            }
+        }, {
+            "id": "2_text",
+            "type": "symbol",
+            "source": "2_ft",
+            "layout": {
+                "visibility": "none",
+                "text-field": "{name_chinese}",
+                "text-font": ["NotoSansHans"],
+                "text-size": 10,
+                "text-anchor": "center",
+                "text-offset": [0, 0]
+            }
+        }, {
+            "id": "3_fl",
+            "type": "fill",
+            "source": "3_fl",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": "#E7E7E7",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        }, {
+            "id": "3_bg",
+            "type": "fill",
+            "source": "3_bg",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": "#EEEEEE",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        }, {
+            "id": "3_ft",
+            "type": "fill",
+            "source": "3_ft",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#CDE7FE", [180101, 180102, 180201, 180301, 180502], "#C6EBFE", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#F8E0ED", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#CDE8FD", 190308, "#D2E8F9", "#D2E8F9"
+                ],
+                "fill-outline-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#AEEEEE", [180101, 180102, 180201, 180301, 180502], "#B4D8F2", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#ECCBDC", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#D2E3F5", 190308, "#BBDBF4", "#B8D7EF"
+                ],
+                "fill-opacity": 1
+            }
+        },
+        {
+            "id": "3_text",
+            "type": "symbol",
+            "source": "3_ft",
+            "layout": {
+                "visibility": "none",
+                "text-field": "{name_chinese}",
+                "text-font": ["NotoSansHans"],
+                "text-size": 10,
+                "text-anchor": "center",
+                "text-offset": [0, 0]
+            }
+        },
+        {
+            "id": "4_fl",
+            "type": "fill",
+            "source": "4_fl",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": "#E7E7E7",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        },
+        {
+            "id": "4_bg",
+            "type": "fill",
+            "source": "4_bg",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": "#EEEEEE",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        },
+        {
+            "id": "4_ft",
+            "type": "fill",
+            "source": "4_ft",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#CDE7FE", [180101, 180102, 180201, 180301, 180502], "#C6EBFE", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#F8E0ED", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#CDE8FD", 190308, "#D2E8F9", "#D2E8F9"
+                ],
+                "fill-outline-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#AEEEEE", [180101, 180102, 180201, 180301, 180502], "#B4D8F2", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#ECCBDC", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#D2E3F5", 190308, "#BBDBF4", "#B8D7EF"
+                ],
+                "fill-opacity": 1
+            }
+        },
+        {
+            "id": "4_text",
+            "type": "symbol",
+            "source": "4_ft",
+            "layout": {
+                "visibility": "none",
+                "text-field": "{name_chinese}",
+                "text-font": ["NotoSansHans"],
+                "text-size": 10,
+                "text-anchor": "center",
+                "text-offset": [0, 0]
+            }
+        },
+        {
+            "id": "-1_fl",
+            "type": "fill",
+            "source": "-1_fl",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": "#E7E7E7",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        },
+        {
+            "id": "-1_bg",
+            "type": "fill",
+            "source": "-1_bg",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": "#EEEEEE",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        },
+        {
+            "id": "-1_ft",
+            "type": "fill",
+            "source": "-1_ft",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#CDE7FE", [180101, 180102, 180201, 180301, 180502], "#C6EBFE", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#F8E0ED", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#CDE8FD", 190308, "#D2E8F9", "#D2E8F9"
+                ],
+                "fill-outline-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#AEEEEE", [180101, 180102, 180201, 180301, 180502], "#B4D8F2", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#ECCBDC", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#D2E3F5", 190308, "#BBDBF4", "#B8D7EF"
+                ],
+                "fill-opacity": 1
+            }
+        },
+        {
+            "id": "-1_text",
+            "type": "symbol",
+            "source": "-1_ft",
+            "layout": {
+                "visibility": "none",
+                "text-field": "{name_chinese}",
+                "text-font": ["NotoSansHans"],
+                "text-size": 10,
+                "text-anchor": "center",
+                "text-offset": [0, 0]
+            }
+        },
+        {
+            "id": "-1_bc",
+            "type": "circle",
+            "source": "-1_bc",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "circle-radius": 10,
+                "circle-color": "#33C2FA"
+            }
+        },
+        {
+            "id": "-1_bct",
+            "type": "symbol",
+            "source": "-1_bc",
+            "layout": {
+                "visibility": "none",
+                "text-field": "{beacon_id}",
+                "text-font": ["NotoSansHans"],
+                "text-size": 10,
+                "text-anchor": "center",
+                "text-offset": [0, 0]
+            }
+        },
+        {
+            "id": "-2_fl",
+            "type": "fill",
+            "source": "-2_fl",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": "#E7E7E7",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        },
+        {
+            "id": "-2_bg",
+            "type": "fill",
+            "source": "-2_bg",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": "#EEEEEE",
+                "fill-outline-color": "#8eadc1",
+                "fill-opacity": 0.8
+            }
+        },
+        {
+            "id": "-2_ft",
+            "type": "fill",
+            "source": "-2_ft",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "fill-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#CDE7FE", [180101, 180102, 180201, 180301, 180502], "#C6EBFE", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#F8E0ED", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#CDE8FD", 190308, "#D2E8F9", "#D2E8F9"
+                ],
+                "fill-outline-color": ["match", ["get", "two_class"],
+                    [180100, 180104, 180200, 180202, 180203, 180204, 180300, 180302, 180401, 180402, 180500, 180501, 180503, 180505], "#AEEEEE", [180101, 180102, 180201, 180301, 180502], "#B4D8F2", [100001, 100003, 100100, 100122, 100124, 100125, 100202, 100208, 100500, 100501], "#ECCBDC", [110000, 110100, 110101, 110102, 110103, 110104, 110105, 110201, 110202, 110301, 110302, 120101, 120201, 120202, 120203, 120603, 120701, 120800, 120801, 120802, 120803, 121001, 121200, 121201, 121202, 121401, 121501, 121601, 121605, 121701, 130301], "#D2E3F5", 190308, "#BBDBF4", "#B8D7EF"
+                ],
+                "fill-opacity": 1
+            }
+        },
+        {
+            "id": "-2_text",
+            "type": "symbol",
+            "source": "-2_ft",
+            "layout": {
+                "visibility": "none",
+                "text-field": "{name_chinese}",
+                "text-font": ["NotoSansHans"],
+                "text-size": 10,
+                "text-anchor": "center",
+                "text-offset": [0, 0]
+            }
+        },
+        {
+            "id": "-2_bc",
+            "type": "circle",
+            "source": "-2_bc",
+            "layout": {
+                "visibility": "none"
+            },
+            "paint": {
+                "circle-radius": 10,
+                "circle-color": "#33C2FA"
+            }
+        },
+        {
+            "id": "-2_bct",
+            "type": "symbol",
+            "source": "-2_bc",
+            "layout": {
+                "visibility": "none",
+                "text-field": "{beacon_id}",
+                "text-font": ["NotoSansHans"],
+                "text-size": 10,
+                "text-anchor": "center",
+                "text-offset": [0, 0]
+            }
+        }
+    ]
+}
